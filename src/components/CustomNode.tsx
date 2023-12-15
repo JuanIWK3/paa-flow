@@ -10,13 +10,12 @@ const edgeStyle: React.CSSProperties = {
 }
 
 export const CustomNode = (nodeInfo: NodeProps) => {
-  console.log(`nodeInfo`, nodeInfo);
 
   return (
     <div
       data-nodeid={nodeInfo.id}
       className="CustomNode"
-      style={{ 
+      style={{
         border: "2px solid black",
         height: 30,
         position: "relative",
@@ -24,7 +23,7 @@ export const CustomNode = (nodeInfo: NodeProps) => {
         width: 30,
         borderRadius: "100%",
         background: "white"
-      }}  
+      }}
     >
       <Handle
         position={Position.Top}

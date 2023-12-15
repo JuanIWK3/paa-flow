@@ -16,37 +16,29 @@ export const CustomEdge = React.memo((edgeInfo: EdgeProps) => {
     targetX: edgeInfo.targetX,
     targetY: edgeInfo.targetY
   });
-  console.log(`RENDER - edgeinfo`, edgeInfo);
+
   return (
     <>
       <path
         className="react-flow__edge-path"
         data-edgeid={edgeInfo.id}
-        style={{ ...DEFAULT_EDGE_STYLES }}
-        onMouseOver={(event) => {
-          const edge = event.target as HTMLElement;
-          console.log(`[CustomEdge]`, edge);
-          edge.style.filter = "drop-shadow( 0px 3px 5px rgba(0, 0, 0, .9))";
-        }}
-        onMouseLeave={(event) => {
-          const edge = event.target as HTMLElement;
-          edge.style.filter = "";
-        }}
+        style={edgeInfo.style}
         d={edgePath}
         markerEnd={edgeInfo.markerEnd}
       />
       <text>
-      <EdgeLabelRenderer>
-        <div
-          style={{
-            position: 'absolute',
-            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-          }}
-          className="nodrag nopan"
-        >
-          {edgeInfo.label}
-        </div>
-      </EdgeLabelRenderer>
+        <EdgeLabelRenderer>
+          <div
+            style={{
+              position: 'absolute',
+              transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+              background: 'white',
+              padding: '5px',
+            }}
+          >
+            {edgeInfo.label}
+          </div>
+        </EdgeLabelRenderer>
       </text>
     </>
   );
