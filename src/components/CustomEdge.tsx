@@ -46,3 +46,5 @@ export const CustomEdge = React.memo((edgeInfo: EdgeProps) => {
     </>
   );
 });
+
+CustomEdge.displayName = "CustomEdge";
