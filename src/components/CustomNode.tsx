@@ -16,13 +16,14 @@ export const CustomNode = (nodeInfo: NodeProps) => {
       data-nodeid={nodeInfo.id}
       className="CustomNode"
       style={{
-        border: "2px solid black",
+        border: "2px solid gray",
         height: 30,
         position: "relative",
         pointerEvents: "all",
+        color: "white",
         width: 30,
         borderRadius: "100%",
-        background: "white"
+        background: "#111"
       }}
     >
       <Handle

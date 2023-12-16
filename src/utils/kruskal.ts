@@ -1,3 +1,5 @@
+import { Edge, Node } from "reactflow";
+
 export type MyEdge = {
   from: number,
   to: number,
@@ -5,16 +7,16 @@ export type MyEdge = {
 }
 
 
-export function kruskal(graph: { nodes: number[], edges: MyEdge[] }) {
+export function kruskal(graph: { nodes: Node[], edges: Edge[] }) {
   const { nodes, edges } = graph;
-  const sortedEdges = edges.sort((a, b) => a.weight - b.weight);
+  const sortedEdges = edges.sort((a, b) => +a.data - +b.data);
   const parent = new Array(nodes.length).fill(0).map((_, i) => i);
   const rank = new Array(nodes.length).fill(0);
-  const result: MyEdge[] = [];
+  const result: Edge[] = [];
   for (const edge of sortedEdges) {
-    const { from, to } = edge;
-    const fromRoot = find(from, parent);
-    const toRoot = find(to, parent);
+    const { source, target } = edge;
+    const fromRoot = find(+source, parent);
+    const toRoot = find(+target, parent);
     if (fromRoot !== toRoot) {
       result.push(edge);
       union(fromRoot, toRoot, parent, rank);

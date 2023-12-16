@@ -32,8 +32,11 @@ export const CustomEdge = React.memo((edgeInfo: EdgeProps) => {
             style={{
               position: 'absolute',
               transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-              background: 'white',
+              background: '#111',
+              color: "gray",
               padding: '5px',
+              borderRadius: '100%',
+              fontSize: '8px',
             }}
           >
             {edgeInfo.label}
