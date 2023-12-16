@@ -1,6 +1,6 @@
 import { Edge, Node } from "reactflow"
 import { calculatePosition } from "./get-node-position"
-import { MyEdge, kruskal } from "./kruskal"
+import { kruskal } from "./kruskal"
 import { graph } from "./graph"
 import { Graph } from "@/types"
 
@@ -25,19 +25,6 @@ export const buildNodes = (nodes: number[]): Node[] => {
         x: calculatePosition(node, nodes).x,
         y: calculatePosition(node, nodes).y
       },
-      type: "custom"
-    }
-  })
-}
-
-export const buildEdges = (edges: MyEdge[]): Edge[] => {
-  return edges.map((edge) => {
-    return {
-      id: `${edge.from}-${edge.to}`,
-      source: edge.from.toString(),
-      target: edge.to.toString(),
-      label: edge.weight.toString(),
-      style: { stroke: "#aaa" },
       type: "custom"
     }
   })
