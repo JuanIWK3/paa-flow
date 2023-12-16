@@ -1,6 +1,4 @@
-import { Node } from "reactflow";
-
-export const calculatePosition = (node: number, nodes: Node[]) => {
+export const calculatePosition = (node: number, nodes: number[]) => {
   const nodeCount = nodes.length;
   const angle = node * (360 / nodeCount);
 
