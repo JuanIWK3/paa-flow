@@ -14,6 +14,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ToolTipButton } from "./ToolTipButton";
 
 const edgeTypes = { custom: CustomEdge };
 const nodeTypes = { custom: CustomNode };
@@ -37,67 +38,6 @@ export const Flow = () => {
       return;
     }
 
-    setFile(file);
-  };
-
-  const applyKruskal = () => {
-    if (nodes.length === 0 || edges.length === 0) {
-      toast({
-        title: "Error",
-        description: "No graph to apply Kruskal's algorithm",
-        variant: "destructive",
-        duration: 2000,
-      });
-
-      return;
-    }
-
-    const kruskalEdges = kruskal({ nodes: nodes, edges: edges });
-
-    setEdges(
-      edges.map((edge, i) => {
-        const kruskalEdge = kruskalEdges.find(
-          (kruskalEdge) =>
-            kruskalEdge.source === edge.source &&
-            kruskalEdge.target === edge.target
-        );
-        if (kruskalEdge)
-          return {
-            ...edge,
-            ...{
-              ...edge,
-              style: {
-                stroke: "#f00",
-              },
-            },
-          };
-        return edge;
-      })
-    );
-  };
-
-  const removeKruskal = () => {
-    setEdges(
-      edges.map((edge, i) => {
-        return {
-          ...edge,
-          ...{
-            ...edge,
-            style: {
-              stroke: "#aaa",
-            },
-          },
-        };
-      })
-    );
-  };
-
-  const removeGraph = () => {
-    setNodes([]);
-    setEdges([]);
-  };
-
-  const upload = () => {
     let graph: { nodes: Node[]; edges: Edge[] } = { nodes: [], edges: [] };
 
     if (!file) {
@@ -160,6 +100,108 @@ export const Flow = () => {
     reader.readAsText(file);
   };
 
+  const applyExample = () => {
+    const nodes: number[] = [];
+    const edges: Edge[] = [];
+
+    const exampleMatrix = [
+      [0, 7, 0, 5, 0, 0, 0],
+      [7, 0, 8, 9, 7, 0, 0],
+      [0, 8, 0, 0, 5, 0, 0],
+      [5, 9, 0, 0, 15, 6, 0],
+      [0, 7, 5, 15, 0, 8, 9],
+      [0, 0, 0, 6, 8, 0, 11],
+      [0, 0, 0, 0, 9, 11, 0],
+    ];
+
+    exampleMatrix.forEach((node, fromIdx) => {
+      nodes.push(fromIdx);
+
+      node.forEach((weight, toIdx) => {
+        if (weight > 0) {
+          if (
+            edges.find(
+              (edge) =>
+                edge.source === toIdx.toString() &&
+                edge.target === fromIdx.toString()
+            )
+          )
+            return;
+
+          edges.push({
+            id: `${fromIdx}-${toIdx}`,
+            source: fromIdx.toString(),
+            target: toIdx.toString(),
+            label: weight.toString(),
+            style: { stroke: "#aaa" },
+            type: "custom",
+          });
+        }
+      });
+    });
+
+    setNodes(buildNodes(nodes));
+    setEdges(edges);
+  };
+
+  const applyKruskal = () => {
+    if (nodes.length === 0 || edges.length === 0) {
+      toast({
+        title: "Error",
+        description: "No graph to apply Kruskal's algorithm",
+        variant: "destructive",
+        duration: 2000,
+      });
+
+      return;
+    }
+
+    const kruskalEdges = kruskal({ nodes: nodes, edges: edges });
+
+    setEdges(
+      edges.map((edge, i) => {
+        const kruskalEdge = kruskalEdges.find(
+          (kruskalEdge) =>
+            kruskalEdge.source === edge.source &&
+            kruskalEdge.target === edge.target
+        );
+        if (kruskalEdge)
+          return {
+            ...edge,
+            ...{
+              ...edge,
+              style: {
+                stroke: "#f00",
+              },
+            },
+          };
+        return edge;
+      })
+    );
+  };
+
+  const removeKruskal = () => {
+    setEdges(
+      edges.map((edge, i) => {
+        return {
+          ...edge,
+          ...{
+            ...edge,
+            style: {
+              stroke: "#aaa",
+            },
+          },
+        };
+      })
+    );
+  };
+
+  const removeGraph = () => {
+    setNodes([]);
+    setEdges([]);
+  };
+
+
   return (
     <ReactFlow
       className="min-h-screen"
@@ -179,12 +221,6 @@ export const Flow = () => {
             onChange={changeFile}
           />
 
-          <ToolTipButton tip="Upload graph">
-            <Button className="w-10 p-3" onClick={upload}>
-              <FileUp />
-            </Button>
-          </ToolTipButton>
-
           <ToolTipButton tip="Apply Kruskal's algorithm">
             <Button variant={"outline"} onClick={applyKruskal}>
               Kruskal
@@ -194,6 +230,16 @@ export const Flow = () => {
           <ToolTipButton tip="Remove Kruskal's algorithm">
             <Button className="w-10 p-3" onClick={() => removeKruskal()}>
               <Undo />
+            </Button>
+          </ToolTipButton>
+
+          <ToolTipButton tip="Use a example">
+            <Button
+              className="bg-blue-500"
+              variant={"secondary"}
+              onClick={() => applyExample()}
+            >
+              Example
             </Button>
           </ToolTipButton>
 
@@ -212,15 +258,3 @@ export const Flow = () => {
   );
 };
 
-const ToolTipButton = (props: { children: React.ReactNode; tip: string }) => {
-  return (
-    <TooltipProvider delayDuration={100}>
-      <Tooltip>
-        <TooltipTrigger asChild>{props.children}</TooltipTrigger>
-        <TooltipContent>
-          <p>{props.tip}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
-};
